@@ -580,7 +580,7 @@ func knock_out(index: int, environment: bool, direct: bool = false) -> void:
 	if (environment or direct) and not r.ko_credited:
 		r.ko_credited = true
 		player.credit_ko(environment)
-	notify(("Environmental takedown: " if environment else "Takedown: ")+r.name+"   %d HIT COMBO" % player.combo)
+		notify(("Environmental takedown: " if environment else "Takedown: ")+r.name+"   %d HIT COMBO" % player.combo)
 		sound.hit(true)
 
 func feedback(crash: bool, position: Vector3, kind: int = 0, weapon: int = 0, intensity: float = 1.0) -> void:
