@@ -1,7 +1,7 @@
 extends RefCounted
 
 const KEYS = {"throttle":KEY_W,"brake":KEY_S,"left":KEY_A,"right":KEY_D,"punch":KEY_J,"kick":KEY_K,"club":KEY_L,"guard":KEY_U,"dodge":KEY_I,"grab":KEY_O,"boost":KEY_SHIFT,"cruise":KEY_C,"primary_attack":KEY_SPACE,"pause":KEY_ESCAPE,"restart":KEY_R}
-const LABELS = {"throttle":"油门","brake":"刹车","left":"左转","right":"右转","punch":"拳击","kick":"踢击","club":"武器攻击","guard":"格挡","dodge":"闪避","grab":"夺械","boost":"蓄力冲刺","cruise":"定速油门"}
+const LABELS = {"throttle":"Throttle","brake":"Brake","left":"Steer Left","right":"Steer Right","punch":"Punch","kick":"Kick","club":"Weapon Attack","guard":"Block","dodge":"Dodge","grab":"Disarm","boost":"Charged Boost","cruise":"Cruise Control"}
 
 const FIXED_KEYS = [KEY_SPACE,KEY_UP,KEY_DOWN,KEY_LEFT,KEY_RIGHT]
 

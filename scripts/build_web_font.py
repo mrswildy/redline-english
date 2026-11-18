@@ -49,7 +49,7 @@ def main():
     assert characters <= final.getBestCmap().keys(), "Subset lost required characters"
     assert full["fvar"].axes[0].minValue == final["fvar"].axes[0].minValue
     # Compare actual outlines and advance widths at every weight used by the HUD.
-    sample = set("公路狂徒滑动转向格挡蓄力刹车攻击暂停继续比赛松岭海岸断崖体力摩托REDLINE0123456789")
+    sample = set("REDLINE ROAD RASH Pine Ridge Coastal Cliffs RACE GARAGE SETTINGS THROTTLE BRAKE STEER ATTACK PAUSE 0123456789")
     for weight in [400, 600]:
         original_glyphs = full.getGlyphSet(location={"wght": weight})
         subset_glyphs = final.getGlyphSet(location={"wght": weight})

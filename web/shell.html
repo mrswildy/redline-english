@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101713">
-<meta name="description" content="REDLINE 公路狂徒：3D 摩托竞速与近战格斗。直接在手机、平板或电脑浏览器驾驶、倾车过弯、挥棒争夺名次。">
-<title>$GODOT_PROJECT_NAME · 在线试玩</title>
+<meta name="description" content="REDLINE: 3D motorcycle racing and close-quarters combat. Ride on mobile, tablet, or desktop. Lean into corners, swing your weapon, and fight for position.">
+<title>$GODOT_PROJECT_NAME · Play in Browser</title>
 $GODOT_HEAD_INCLUDE
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#10130f;color:#f0e7d5;font-family:"PingFang SC","Hiragino Sans GB",system-ui,sans-serif;overflow:hidden}body{overscroll-behavior:none;-webkit-user-select:none;user-select:none}canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}[hidden]{display:none!important}
@@ -18,23 +18,23 @@ button{position:relative;isolation:isolate;overflow:hidden;display:flex;align-it
 </style>
 </head>
 <body>
-<canvas id="canvas" tabindex="0" aria-label="REDLINE 摩托竞速游戏"></canvas>
-<div id="rotate" hidden><strong>请横屏握持手机或平板</strong><p>横屏后即可进入游戏。比赛中旋转屏幕会自动暂停。</p></div>
-<section id="launch" aria-label="游戏首页">
-<header class="topbar"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>公路竞速 · 近身格斗</span><span class="edition">BROWSER EDITION</span></header>
-<div class="panel"><div class="eyebrow">RIDE HARD. FIGHT DIRTY.</div><h1>REDLINE</h1><h2>公路狂徒</h2>
-<p class="intro"><strong>抢过弯心，甩开对手。</strong><br>从山林到海岸，把名次一路打回来。</p>
-<button id="play" type="button" aria-describedby="status"><span id="play-fill" aria-hidden="true"></span><span id="play-label">进入游戏</span><span id="play-arrow" aria-hidden="true">↗</span></button>
-<div id="status" role="status" aria-live="polite">点击出发 · 开启游戏声音</div><div id="error" role="alert" hidden></div>
-<div class="keys" id="keys">WASD / ↑ ↓ ← → 驾驶 · 左键 / 空格攻击<br>U 格挡 · I 闪避 · O 夺械 · Shift 蓄力冲刺 · C 定速 · Esc 暂停</div>
-<noscript>请启用 JavaScript 后再打开游戏。</noscript></div>
-<footer class="bottom"><p class="hint">电脑键盘 / 手柄 · 手机和平板横屏触控<br><span class="storage">进度保存在此浏览器，清除网站数据会删除存档。</span></p><nav class="links"><a href="https://github.com/vorojar/redline-road-rash" target="_blank" rel="noopener">项目源码 ↗</a><a href="credits.html" target="_blank" rel="noopener">素材与授权 ↗</a></nav></footer>
+<canvas id="canvas" tabindex="0" aria-label="REDLINE motorcycle racing game"></canvas>
+<div id="rotate" hidden><strong>Rotate your phone or tablet to landscape</strong><p>Switch to landscape to play. Rotating during a race pauses the game.</p></div>
+<section id="launch" aria-label="Game start screen">
+<header class="topbar"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Motorcycle Racing · Close-Quarters Combat</span><span class="edition">BROWSER EDITION</span></header>
+<div class="panel"><div class="eyebrow">RIDE HARD. FIGHT DIRTY.</div><h1>REDLINE</h1><h2>ROAD RASH</h2>
+<p class="intro"><strong>Own the apex. Leave your rivals behind.</strong><br>Race from forest roads to the coast and fight your way to the front.</p>
+<button id="play" type="button" aria-describedby="status"><span id="play-fill" aria-hidden="true"></span><span id="play-label">PLAY</span><span id="play-arrow" aria-hidden="true">↗</span></button>
+<div id="status" role="status" aria-live="polite">Click to start · Game audio will be enabled</div><div id="error" role="alert" hidden></div>
+<div class="keys" id="keys">WASD / ↑ ↓ ← → Ride · Left Click / Space Attack<br>U Block · I Dodge · O Disarm · Shift Charge Boost · C Cruise Control · Esc Pause</div>
+<noscript>Please enable JavaScript to play the game.</noscript></div>
+<footer class="bottom"><p class="hint">Keyboard / Controller · Mobile and tablet: landscape touch controls<br><span class="storage">Progress is saved in this browser. Clearing site data deletes the save.</span></p><nav class="links"><a href="https://github.com/vorojar/redline-road-rash" target="_blank" rel="noopener">Original source ↗</a><a href="credits.html" target="_blank" rel="noopener">Credits &amp; Licenses ↗</a></nav></footer>
 </section>
 <script src="$GODOT_URL"></script>
 <script>
 window.redlineTouchDevice=navigator.maxTouchPoints>0 && (matchMedia('(pointer:coarse)').matches || /Android|iPhone|iPad/.test(navigator.userAgent));
 const canvas=document.getElementById('canvas');
-if(window.redlineTouchDevice) document.getElementById('keys').textContent='自动油门 · 摇杆转向 · 拳头攻击 · 圆盘刹车 · 盾牌格挡 · 按住闪电，蓄满松开冲刺';
+if(window.redlineTouchDevice) document.getElementById('keys').textContent='Auto throttle · Joystick steer · Punch · Brake · Block · Hold to charge, release to boost';
 function suspendGame(){if(window.redlineSuspend) window.redlineSuspend();}
 function fitGame(){
  const portrait=window.redlineTouchDevice && innerHeight>innerWidth;
@@ -63,7 +63,7 @@ function sizeTouchCanvas(){
 sizeTouchCanvas();addEventListener('resize',sizeTouchCanvas);
 const play=document.getElementById('play'), status=document.getElementById('status'), label=document.getElementById('play-label');
 let failed=false, cacheAvailable=true;
-function noCache(){cacheAvailable=false;status.textContent='本次可正常游玩；浏览器未能保存资源缓存。';}
+function noCache(){cacheAvailable=false;status.textContent='You can still play, but this browser could not cache the game files.';}
 if('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message',event=>{if(event.data?.type==='cache-unavailable')noCache();});
 async function prepareCache(){
  if(!('serviceWorker' in navigator) || !('caches' in window)){noCache();return;}
@@ -79,26 +79,26 @@ async function prepareCache(){
 const cacheReady=prepareCache();
 play.addEventListener('click',async()=>{
  if(failed){location.reload();return;}
- play.disabled=true;play.classList.add('loading');play.setAttribute('aria-busy','true');label.textContent='正在准备…';document.getElementById('play-arrow').textContent='';
+ play.disabled=true;play.classList.add('loading');play.setAttribute('aria-busy','true');label.textContent='Preparing…';document.getElementById('play-arrow').textContent='';
  const missing=Engine.getMissingFeatures({threads:$GODOT_THREADS_ENABLED});
- if(missing.length){fail(new Error('浏览器缺少所需支持：'+missing.join(', ')+'。请使用支持 WebGL 2 的 Safari、Chrome、Edge 或 Firefox。'));return;}
+ if(missing.length){fail(new Error('Your browser is missing required features: '+missing.join(', ')+'. Use Safari, Chrome, Edge, or Firefox with WebGL 2 support.'));return;}
  try{
   await cacheReady;
   let stored=0;
   if(cacheAvailable){
    try{for(const file of [config.mainPack,config.executable+'.wasm']) if(await caches.match(new URL(file,location.href).href))stored++;}catch(_){noCache();}
   }
-  const verb=stored===2?'读取本地资源':stored===1?'更新游戏资源':'下载游戏资源';
-  if(cacheAvailable)status.textContent=stored===2?'资源已缓存，正在启动引擎…':stored===1?'仅下载缺少的资源，已有资源继续复用。':'首次加载后自动缓存，下次进入可直接复用。';
+  const verb=stored===2?'Loading cached files':stored===1?'Updating game files':'Downloading game files';
+  if(cacheAvailable)status.textContent=stored===2?'Files cached. Starting the game engine…':stored===1?'Downloading missing files; cached files will be reused.':'Game files will be cached after this first download.';
   label.textContent=verb+'…';
   await engine.startGame({onProgress:(current,total)=>{
-   if(total>0){const percent=Math.min(100,Math.floor(current/total*100));play.style.setProperty('--load',percent/100);label.textContent=current>=total?'正在启动游戏…':`${verb} ${percent}%`;}
+   if(total>0){const percent=Math.min(100,Math.floor(current/total*100));play.style.setProperty('--load',percent/100);label.textContent=current>=total?'Starting game…':`${verb} ${percent}%`;}
   },onExit:()=>location.reload()});
   document.getElementById('launch').hidden=true;canvas.focus();document.body.dataset.gameReady='true';fitGame();
   navigator.serviceWorker?.controller?.postMessage({type:'prune-game-cache'});
  }catch(error){fail(error);}
 });
-function fail(error){console.error(error);failed=true;status.textContent='游戏未能加载，请检查网络后重试。';const output=document.getElementById('error');output.hidden=false;output.textContent=String(error.message||error);play.disabled=false;play.classList.remove('loading');play.setAttribute('aria-busy','false');label.textContent='重新载入';}
+function fail(error){console.error(error);failed=true;status.textContent='The game could not load. Check your connection and try again.';const output=document.getElementById('error');output.hidden=false;output.textContent=String(error.message||error);play.disabled=false;play.classList.remove('loading');play.setAttribute('aria-busy','false');label.textContent='RETRY';}
 </script>
 </body>
 </html>

@@ -22,12 +22,12 @@ static func pack_speed(base: float, player_speed: float, gap: float) -> float:
 		return minf(base,maxf(6,player_speed-clampf((gap-12)*.35,0,16)))
 	return base
 
-const PERSONALITIES = ["记仇反击","打完就撤","踢向车流","持械强攻","伺机夺械"]
+const PERSONALITIES = ["Grudge Match","Hit and Run","Kick into Traffic","Armed Aggressor","Opportunistic Disarmer"]
 
 static func intent_label(r: Dictionary) -> String:
-	if r.retreat_time>0: return "退避调整"
-	if r.stealing and r.windup>0: return "正在夺械"
-	if r.style==0 and r.grudge_time>0: return "追击复仇"
+	if r.retreat_time>0: return "Regrouping"
+	if r.stealing and r.windup>0: return "Disarming"
+	if r.style==0 and r.grudge_time>0: return "Revenge Pursuit"
 	return PERSONALITIES[r.style]
 
 static func challenge_score(race: Node3D, r: Dictionary) -> float:
@@ -205,8 +205,8 @@ static func update(race: Node3D, dt: float) -> void:
 			r.kind = 0 if r.stealing else 1 if r.style==2 else 2 if r.weapon>0 else 0
 			r.attack_side = -1.0 if target_lane<r.lane else 1.0
 			r.windup = Combat.WINDUPS[r.kind]
-			if r.combat_target==-1 and r.stealing: race.notify(r.name+" 伸手夺械！格挡或闪避",1.0)
-			elif r.combat_target==-1: race.notify(r.name+[" 挥拳"," 抬腿"," 举起"+Combat.WEAPONS[r.weapon].name][r.kind]+"！U 格挡 / I 闪避",1.0)
+			if r.combat_target==-1 and r.stealing: race.notify(r.name+" is reaching for your weapon! Block or dodge.",1.0)
+			elif r.combat_target==-1: race.notify(r.name+[" throws a punch"," raises a leg"," raises a "+Combat.WEAPONS[r.weapon].name][r.kind]+"! U to block / I to dodge.",1.0)
 		if absf(r.lane)>7.9:
 			race.knock_out(i,r.last_hit_age<4)
 		if r.s>=race.track.length:

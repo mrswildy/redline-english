@@ -68,7 +68,7 @@ static func update_police(race: Node3D,dt: float) -> void:
 		race.police.warning = 5.0
 		race.police.phase="pursuit";race.police.yaw=0;race.police.hold=0;race.police.arrest=0
 		race.police.speed=clampf(race.player.speed+8,43,59)
-		race.notify("警笛从后方接近 · 尽快脱离追击",3)
+		race.notify("Police sirens closing from behind · lose the pursuit!",3)
 	if not race.police.active:
 		return
 	race.police.warning = maxf(0,race.police.warning-dt)
@@ -78,13 +78,13 @@ static func update_police(race: Node3D,dt: float) -> void:
 		race.police.active = false
 		race.heat = 15
 		race.police.support_active=false
-		race.notify("已甩开警方")
+		race.notify("You've escaped the police.")
 		return
 	elif absf(race.player.distance-race.police.s)<9 and absf(race.player.lane-race.police.lane)<2.8 and race.police.warning<=0 and (race.player.crash_timer>1.2 or race.player.speed<2.5):
 		race.police.arrest += dt
 		if race.police.arrest>.85:
 			race.police.speed=0;race.police.support_speed=0
-			race.finish("BUSTED","警方截停，比赛结束")
+			race.finish("BUSTED","Police stopped you. Race over.")
 			return
 	else:
 		race.police.arrest = 0.0
@@ -95,7 +95,7 @@ static func update_police(race: Node3D,dt: float) -> void:
 		race.police.support_warning=6.0
 		race.police.support_phase="pursuit";race.police.support_hold=0
 		race.police.support_speed=clampf(race.player.speed+10,61,63)
-		race.notify("增援警车接近 · 留意侧后方",3)
+		race.notify("Police backup approaching · watch your flanks.",3)
 	if race.police.support_active:
 		var support_gap: float=race.player.distance-race.police.support_s
 		race.police.support_warning=maxf(0,race.police.support_warning-dt)
@@ -109,7 +109,7 @@ static func update_police(race: Node3D,dt: float) -> void:
 			var barrier = vehicle(Color("d9d6c7"),false,true)
 			race.add_child(barrier)
 			race.traffic.append({"mesh":barrier,"s":race.player.distance+220,"lane":side*lane,"speed":0.0,"half_length":2.1})
-		race.notify("前方 220 米右侧封锁 · 左侧通行" if side>0 else "前方 220 米左侧封锁 · 右侧通行",4)
+		race.notify("Roadblock 220 m ahead on the right · pass on the left." if side>0 else "Roadblock 220 m ahead on the left · pass on the right.",4)
 
 static func update_pursuer(race: Node3D, prefix: String, dt: float) -> void:
 	var cop: Dictionary=race.police

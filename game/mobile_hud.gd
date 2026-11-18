@@ -36,8 +36,8 @@ func draw(h) -> void:
 	if not h.mobile_landscape():
 		h.panel(Rect2(0,0,960,height),Color("101713"))
 		h.text("REDLINE",80,height*.43,70,h.cream,true)
-		h.text("请横屏握持手机或平板",80,height*.43+75,36,h.gold)
-		h.text("转回横屏后，点继续比赛",80,height*.43+132,30,h.faded)
+		h.text("Rotate your phone or tablet to landscape",80,height*.43+75,36,h.gold)
+		h.text("Return to landscape and tap to resume",80,height*.43+132,30,h.faded)
 		return
 	if race.mode == "loading":
 		h.draw_loading(Vector2(960,height))
@@ -55,22 +55,22 @@ func heading(h, title: String) -> void:
 func draw_menu(h, height: float) -> void:
 	var race = h.race
 	if race.mode!="ready": h.draw_rect(Rect2(0,0,960,height),Color("101713"))
-	heading(h,"REDLINE" if race.mode=="ready" else ("车库 / GARAGE" if race.mode=="garage" else "驾驶设置"))
+	heading(h,"REDLINE" if race.mode=="ready" else ("GARAGE" if race.mode=="garage" else "SETTINGS"))
 	if race.mode == "ready":
 		h.panel(Rect2(16,72,436,266))
 		for i in range(race.career.catalog.tracks.size()):
 			var track: Dictionary = race.career.catalog.tracks[i]
-			h.button(Rect2(28,84+i*59,412,52),track.name+(" · 12 km" if track.id=="interstate" else "")+(" · 未解锁" if track.id not in race.career.unlocked else ""),func(): race.select_track(i),false,false,race.track.id==track.id)
-		h.button(Rect2(28,274,412,56),"开始比赛",func(): race.start(),true)
+			h.button(Rect2(28,84+i*59,412,52),track.name+(" · 12 km" if track.id=="interstate" else "")+(" · LOCKED" if track.id not in race.career.unlocked else ""),func(): race.select_track(i),false,false,race.track.id==track.id)
+		h.button(Rect2(28,274,412,56),"START RACE",func(): race.start(),true)
 		h.panel(Rect2(478,72,458,100))
 		h.panel(Rect2(16,356,436,70))
 		h.text(race.career.bike().name,496,112,25,h.cream,true)
-		h.text("自动油门 · 松开刹车继续加速",496,148,19,h.gold)
-		h.button(Rect2(492,196,432,64),"车库 · 选择摩托",func(): race.menu_action("garage"))
-		h.button(Rect2(492,272,432,64),"驾驶设置",func(): race.menu_action("settings"))
-		h.button(Rect2(492,348,432,64),"教学练习",func(): race.start(true))
-		h.text("左手滑动转向",28,382,21,h.cream)
-		h.text("右手攻击 / 刹车 / 蓄力冲刺",28,413,19,h.faded)
+		h.text("AUTO THROTTLE · RELEASE BRAKE TO ACCELERATE",496,148,19,h.gold)
+		h.button(Rect2(492,196,432,64),"GARAGE · CHOOSE A BIKE",func(): race.menu_action("garage"))
+		h.button(Rect2(492,272,432,64),"SETTINGS",func(): race.menu_action("settings"))
+		h.button(Rect2(492,348,432,64),"PRACTICE",func(): race.start(true))
+		h.text("SLIDE TO STEER WITH YOUR LEFT HAND",28,382,21,h.cream)
+		h.text("ATTACK / BRAKE / CHARGED BOOST WITH YOUR RIGHT",28,413,19,h.faded)
 	elif race.mode == "garage":
 		h.panel(Rect2(16,88,414,height-104),Color("101713"))
 		for i in range(3):
@@ -78,21 +78,21 @@ func draw_menu(h, height: float) -> void:
 			h.button(Rect2(28,100+i*74,390,64),bike.name,func(): h.preview_bike(i),false,false,h.garage_index==i)
 		var selected: Dictionary = race.career.catalog.bikes[h.garage_index]
 		var owned: bool = selected.id in race.career.owned
-		h.button(Rect2(28,height-86,390,64),"使用这辆摩托" if owned else "购买 $%d" % selected.price,func(): h.purchase_bike(),true,not owned and race.career.credits<int(selected.price))
-		h.text("%d km/h · 耐久 %d" % [selected.top_speed*3.6,selected.durability],456,116,26,h.gold)
-		h.button(Rect2(452,height-86,218,64),"重置视角",func(): h.garage_view.reset_view())
-		h.button(Rect2(684,height-86,252,64),"返回赛事",func(): race.menu_action("home"))
+		h.button(Rect2(28,height-86,390,64),"RIDE THIS BIKE" if owned else "BUY $%d" % selected.price,func(): h.purchase_bike(),true,not owned and race.career.credits<int(selected.price))
+		h.text("%d km/h · DURABILITY %d" % [selected.top_speed*3.6,selected.durability],456,116,26,h.gold)
+		h.button(Rect2(452,height-86,218,64),"RESET VIEW",func(): h.garage_view.reset_view())
+		h.button(Rect2(684,height-86,252,64),"BACK TO RACES",func(): race.menu_action("home"))
 	else:
 		var settings: Dictionary = race.career.settings
 		h.panel(Rect2(16,92,928,height-108),Color("101713"))
-		h.button(Rect2(28,104,430,64),"难度："+race.difficulty().name,func(): settings.difficulty=(int(settings.difficulty)+1)%3; h.save_settings())
-		h.button(Rect2(28,180,430,64),"路肩容错："+("开" if settings.assist else "关"),func(): settings.assist=not settings.assist; race.player.assist=settings.assist; h.save_settings())
-		h.button(Rect2(28,256,430,64),"音量：%d%%" % (settings.volume*100),func(): settings.volume=0.0 if settings.volume>=.99 else minf(1,settings.volume+.25); h.save_settings())
-		h.button(Rect2(28,332,430,64),"音乐：%d%%" % (settings.music*100),func(): settings.music=0.0 if settings.music>=.99 else minf(1,settings.music+.25); h.save_settings())
-		h.button(Rect2(490,104,434,64),"操作："+h.control_mode_label(),func(): h.cycle_control_mode())
-		h.button(Rect2(490,180,434,64),"转向区："+("右手" if settings.touch_left_handed else "左手"),func(): settings.touch_left_handed=not settings.touch_left_handed; race.clear_touch(); h.save_settings())
-		h.button(Rect2(490,256,434,64),"画质："+h.quality_label(),func(): h.cycle_quality())
-		h.button(Rect2(490,332,434,64),"保存并返回",func(): h.save_settings(); race.mode="ready",true)
+		h.button(Rect2(28,104,430,64),"DIFFICULTY: "+race.difficulty().name,func(): settings.difficulty=(int(settings.difficulty)+1)%3; h.save_settings())
+		h.button(Rect2(28,180,430,64),"OFF-ROAD ASSIST: "+("ON" if settings.assist else "OFF"),func(): settings.assist=not settings.assist; race.player.assist=settings.assist; h.save_settings())
+		h.button(Rect2(28,256,430,64),"SFX VOLUME: %d%%" % (settings.volume*100),func(): settings.volume=0.0 if settings.volume>=.99 else minf(1,settings.volume+.25); h.save_settings())
+		h.button(Rect2(28,332,430,64),"MUSIC: %d%%" % (settings.music*100),func(): settings.music=0.0 if settings.music>=.99 else minf(1,settings.music+.25); h.save_settings())
+		h.button(Rect2(490,104,434,64),"INPUT: "+h.control_mode_label(),func(): h.cycle_control_mode())
+		h.button(Rect2(490,180,434,64),"STEERING SIDE: "+("RIGHT" if settings.touch_left_handed else "LEFT"),func(): settings.touch_left_handed=not settings.touch_left_handed; race.clear_touch(); h.save_settings())
+		h.button(Rect2(490,256,434,64),"GRAPHICS: "+h.quality_label(),func(): h.cycle_quality())
+		h.button(Rect2(490,332,434,64),"SAVE & RETURN",func(): h.save_settings(); race.mode="ready",true)
 	if race.message_time>0:
 		h.panel(Rect2(190,84,580,52))
 		h.text(race.message,206,119,24,h.gold)
@@ -110,7 +110,7 @@ func draw_race(h, height: float) -> void:
 		var rival = race.racers[opponent]
 		h.text(rival.name+" · %d m" % Vector2(rival.s-p.distance,rival.lane-p.lane).length(),604,24,17,h.red if (rival.windup>0 and rival.combat_target==-1) else h.cream,true)
 		h.bar(604,32,220,rival.hp,h.red if rival.hp<35 else h.gold)
-		h.text(("小心夺械" if rival.stealing else "准备格挡") if (rival.windup>0 and rival.combat_target==-1) else race.RacerAI.intent_label(rival),604,56,16,h.red if (rival.windup>0 and rival.combat_target==-1) else h.faded)
+		h.text(("WATCH FOR DISARM" if rival.stealing else "WINDING UP") if (rival.windup>0 and rival.combat_target==-1) else race.RacerAI.intent_label(rival),604,56,16,h.red if (rival.windup>0 and rival.combat_target==-1) else h.faded)
 	else:
 		h.text(race.Combat.WEAPONS[p.weapon].name,620,37,20,h.gold)
 	h.bar(24,51,160,p.health,h.red if p.health<35 else Color("789463"))
@@ -125,7 +125,7 @@ func draw_race(h, height: float) -> void:
 			draw_control(h,action,rect)
 
 		if race.tutorial:
-			var lessons = ["自动加速至 70 km/h","滑动转向，换到另一条车道","靠近对手，点击攻击命中","按住蓄力，蓄满后松开冲刺","教学完成 · 继续挑战终点"]
+			var lessons = ["Accelerate to 70 km/h","Slide to steer into another lane","Move close and tap to land a hit","Hold to charge, then release to boost","Tutorial complete · Keep racing to the finish"]
 			h.text(lessons[race.lesson],288,224,24,h.gold)
 	if race.mode in ["paused","finished","countdown"]:
 		draw_overlay(h,height)
@@ -137,13 +137,13 @@ func draw_overlay(h, height: float) -> void:
 		return
 	if race.mode == "countdown":
 		h.text(str(int(ceil(race.countdown))),448,height*.50,80,h.gold,true)
-		h.text("自动油门 · 准备转向",344,height*.50+45,26,h.cream)
+		h.text("AUTO THROTTLE · READY TO STEER",344,height*.50+45,26,h.cream)
 		return
 	h.panel(Rect2(0,64,960,height-64),Color(.02,.03,.025,.75))
 	var y = maxf(96,(height-324)*.5)
 	h.panel(Rect2(204,y,552,324),Color("101713"))
-	h.text("比赛已暂停",230,y+47,36,h.cream,true)
-	h.text("滑动转向 · 点击攻击",230,y+91,26,h.gold)
-	h.text("按住刹车减速，松开后自动加速。",230,y+130,24,h.faded)
-	h.button(Rect2(230,y+164,500,64),"继续比赛",func(): race.menu_action("resume"),true)
-	h.button(Rect2(230,y+242,500,64),"返回赛事 / 车库",func(): race.menu_action("home"))
+	h.text("RACE PAUSED",230,y+47,36,h.cream,true)
+	h.text("SLIDE TO STEER · TAP TO ATTACK",230,y+91,26,h.gold)
+	h.text("Hold the brake to slow down; release to accelerate.",230,y+130,24,h.faded)
+	h.button(Rect2(230,y+164,500,64),"RESUME RACE",func(): race.menu_action("resume"),true)
+	h.button(Rect2(230,y+242,500,64),"BACK TO RACES / GARAGE",func(): race.menu_action("home"))

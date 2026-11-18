@@ -231,7 +231,7 @@ func select_track(index: int) -> bool:
 		return false
 	var next: Dictionary = career.catalog.tracks[index]
 	if next.id not in career.unlocked:
-		notify("海岸断崖进入前三，解锁跨郡耐力赛。" if next.id=="interstate" else "松岭公路进入前三，解锁海岸断崖。",3)
+		notify("Finish in the top three at Coastal Cliffs to unlock County Line Endurance." if next.id=="interstate" else "Finish in the top three at Pine Ridge Road to unlock Coastal Cliffs.",3)
 		return false
 	if next.id != track.id:
 		clear_touch()
@@ -407,7 +407,7 @@ func _physics_process(dt: float) -> void:
 		world.set_start_lights(start_light_phase)
 		if countdown<=0:
 			mode = "racing"
-			notify("GO！冲出车流。")
+			notify("GO! Break through the traffic.")
 	if mode != "racing":
 		return
 	if hit_stop>0:
@@ -476,9 +476,9 @@ func simulate(dt: float, throttle: float, brake: float, steer: float, boost: boo
 		player.health = maxf(player.health,35)
 		player.durability = maxf(player.durability,35)
 	if player.health<=0 or player.durability<=0:
-		finish("WRECKED","车辆或车手无法继续比赛")
+		finish("WRECKED","Your bike or rider can't continue.")
 	elif player.distance>=float(track.length):
-		finish("FINISH","第 %d 名完赛" % rank)
+		finish("FINISH","Finished · position %d" % rank)
 	telemetry_clock += dt
 	if telemetry_clock>=.25:
 		telemetry_clock = 0
@@ -510,7 +510,7 @@ func attack(kind: int) -> bool:
 	if kind<0 or kind>2 or player.cooldown>0 or player.crash_timer>0 or pending_attack>0 or player.guarding or player.dodge_time>0:
 		return false
 	if kind == 2 and player.weapon == 0:
-		notify("空手 · 对手蓄力或硬直时按 O 夺械")
+		notify("Unarmed · Press O to disarm a rival who is winding up or staggered.")
 		return false
 	sound.swing(kind)
 	pending_kind = kind
@@ -531,7 +531,7 @@ func resolve_attack() -> bool:
 	if r.crash>0 or r.finished or (r.lane-player.lane)*player.attack_side<0 or absf(r.s-player.distance)>2.6 or absf(r.lane-player.lane)>Combat.REACH[pending_kind]:
 		return false
 	if r.dodge > 0:
-		notify(r.name+" 闪过攻击")
+		notify(r.name+" dodged your attack.")
 		return false
 	var power: float = [13,17,Combat.WEAPONS[player.weapon].damage][pending_kind]
 	if r.guard > 0 and pending_kind != 1 and r.stamina >= 20:
@@ -542,9 +542,9 @@ func resolve_attack() -> bool:
 			player.weapon = 0
 			pending_attack = 0
 			player.attack_time = 0
-			notify(r.name+" 格挡后夺走了武器！")
+			notify(r.name+" blocked and stole your weapon!")
 		else:
-			notify(r.name+" 格挡 · 踢击可破防")
+			notify(r.name+" blocked · a kick can break their guard.")
 		return true
 	if pending_kind == 1:
 		r.guard = 0
@@ -563,7 +563,7 @@ func resolve_attack() -> bool:
 	r.ko_credited = false
 	player.hits += 1
 	feedback(false,r.mesh.global_position+Vector3.UP,pending_kind,player.weapon)
-	notify(["拳击命中","踢击！推入车流","棍击命中"][pending_kind])
+	notify(["Punch landed!","Kick landed! Shoved into traffic.","Weapon hit!"][pending_kind])
 	if r.hp<=0 or r.stability<=0 or absf(r.lane)>7.8:
 		knock_out(attack_target,false,true)
 	return true
@@ -580,7 +580,7 @@ func knock_out(index: int, environment: bool, direct: bool = false) -> void:
 	if (environment or direct) and not r.ko_credited:
 		r.ko_credited = true
 		player.credit_ko(environment)
-		notify(("环境击倒 " if environment else "击倒 ")+r.name+"   %d 连击" % player.combo)
+	notify(("Environmental takedown: " if environment else "Takedown: ")+r.name+"   %d HIT COMBO" % player.combo)
 		sound.hit(true)
 
 func feedback(crash: bool, position: Vector3, kind: int = 0, weapon: int = 0, intensity: float = 1.0) -> void:
@@ -619,7 +619,7 @@ func finish(title: String, subtitle: String) -> void:
 		if title == "FINISH" and not tutorial:
 			reward = career.settle(track.id,rank,elapsed,player.knockouts,player.environment_kos)
 			if not test_mode and not career.save_profile():
-				message += " · 存档失败"
+				message += " · Save failed"
 		if not test_mode:
 			var replay = FileAccess.open("user://last_race.json",FileAccess.WRITE)
 			if replay:

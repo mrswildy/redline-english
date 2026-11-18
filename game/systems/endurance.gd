@@ -33,7 +33,7 @@ func update(race: Node3D, dt: float) -> void:
 		visited.append(index)
 		repair_time=0
 		var stage: Dictionary=stages[index]
-		race.notify(stage.name+(" · 靠右停车 2 秒维修补给" if stage.kind=="service" else ""),4)
+		race.notify(stage.name+(" · Pull over on the right for 2 seconds to repair and refuel." if stage.kind=="service" else ""),4)
 		if stage.heat_floor>0: race.heat=maxf(race.heat,stage.heat_floor)
 		if stage.kind=="service":
 			race.heat=0
@@ -48,4 +48,4 @@ func update(race: Node3D, dt: float) -> void:
 			p.health=minf(100,p.health+40)
 			p.durability=minf(p.max_durability,p.durability+35)
 			serviced.append(index)
-			race.notify("维修完成 · 体力 +40 / 车况 +35",3)
+			race.notify("Service complete · stamina +40 / bike condition +35",3)

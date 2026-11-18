@@ -3,7 +3,7 @@
     {
       "id": "ratchet",
       "name": "RATCHET 750",
-      "description": "运动双缸 · 钢管车架 · 易于控制",
+      "description": "Sport twin · tubular frame · easy handling",
       "price": 0,
       "top_speed": 53.0,
       "acceleration": 12.8,
@@ -14,13 +14,13 @@
       "grip_height": 1.262,
       "grip_forward": 0.308,
       "wheelbase": 1.0,
-      "body_style": "STREET / 半整流街车",
+      "body_style": "STREET / HALF-FAIRING",
       "grip_width": 0.275
     },
     {
       "id": "revenant",
       "name": "REVENANT 900",
-      "description": "巡航 V 双缸 · 强化车架 · 耐久优势",
+      "description": "Cruiser V-twin · reinforced frame · extra durability",
       "price": 1800,
       "top_speed": 57.0,
       "acceleration": 14.0,
@@ -31,13 +31,13 @@
       "grip_height": 1.21,
       "grip_forward": 0.6,
       "wheelbase": 1.18,
-      "body_style": "MUSCLE / 长轴肌肉车",
+      "body_style": "MUSCLE / LONG-WHEELBASE",
       "grip_width": 0.39
     },
     {
       "id": "phantom",
       "name": "PHANTOM 1100",
-      "description": "轻量车身 · 高转四缸 · 极限极速",
+      "description": "Lightweight · high-revving four · top speed",
       "price": 5200,
       "top_speed": 63.0,
       "acceleration": 16.0,
@@ -48,14 +48,14 @@
       "grip_height": 1.09,
       "grip_forward": 0.51,
       "wheelbase": 1.0,
-      "body_style": "SPORT / 全包围跑车",
+      "body_style": "SPORT / FULL FAIRING",
       "grip_width": 0.39
     }
   ],
   "tracks": [
     {
       "id": "pine",
-      "name": "松岭公路",
+      "name": "Pine Ridge Road",
       "subtitle": "PINE COUNTY / ROUTE 09",
       "length": 3000.0,
       "theme": "forest",
@@ -70,7 +70,7 @@
     },
     {
       "id": "coast",
-      "name": "海岸断崖",
+      "name": "Coastal Cliffs",
       "subtitle": "COAST HIGHWAY / ROUTE 17",
       "length": 3600.0,
       "theme": "coast",
@@ -85,7 +85,7 @@
     },
     {
       "id": "interstate",
-      "name": "跨郡耐力赛",
+      "name": "County Line Endurance",
       "subtitle": "COUNTY RUN / 12 KM",
       "length": 12000.0,
       "theme": "forest",
@@ -101,7 +101,7 @@
       "stages": [
         {
           "start": 0,
-          "name": "出城争位",
+          "name": "Outskirts Showdown",
           "kind": "open",
           "traffic_speed": 25,
           "pressure": 0.7,
@@ -109,7 +109,7 @@
         },
         {
           "start": 1600,
-          "name": "山脊连续弯",
+          "name": "Ridge Switchbacks",
           "kind": "ridge",
           "traffic_speed": 20,
           "pressure": 0.4,
@@ -117,7 +117,7 @@
         },
         {
           "start": 2900,
-          "name": "货运走廊",
+          "name": "Freight Corridor",
           "kind": "freight",
           "traffic_speed": 16,
           "pressure": 0.6,
@@ -125,7 +125,7 @@
         },
         {
           "start": 4100,
-          "name": "路边维修站",
+          "name": "Roadside Service Stop",
           "kind": "service",
           "traffic_speed": 22,
           "pressure": 0.0,
@@ -133,7 +133,7 @@
         },
         {
           "start": 4700,
-          "name": "跨谷高架",
+          "name": "Valley Overpass",
           "kind": "bridge",
           "traffic_speed": 24,
           "pressure": 0.65,
@@ -141,7 +141,7 @@
         },
         {
           "start": 6100,
-          "name": "警方追截区",
+          "name": "Police Intercept Zone",
           "kind": "pursuit",
           "traffic_speed": 22,
           "pressure": 0.5,
@@ -149,7 +149,7 @@
         },
         {
           "start": 8100,
-          "name": "山口维修站",
+          "name": "Mountain Pass Service Stop",
           "kind": "service",
           "traffic_speed": 22,
           "pressure": 0.0,
@@ -157,7 +157,7 @@
         },
         {
           "start": 8700,
-          "name": "最后山路",
+          "name": "Final Mountain Run",
           "kind": "ridge",
           "traffic_speed": 18,
           "pressure": 0.6,
@@ -165,7 +165,7 @@
         },
         {
           "start": 10400,
-          "name": "终点争夺",
+          "name": "Final Sprint",
           "kind": "final",
           "traffic_speed": 24,
           "pressure": 1.0,
@@ -176,19 +176,19 @@
   ],
   "difficulties": [
     {
-      "name": "休闲",
+      "name": "Easy",
       "speed": 0.85,
       "damage": 0.65,
       "heat": 0.6
     },
     {
-      "name": "经典",
+      "name": "Classic",
       "speed": 1.0,
       "damage": 1.0,
       "heat": 1.0
     },
     {
-      "name": "硬派",
+      "name": "Hard",
       "speed": 1.08,
       "damage": 1.25,
       "heat": 1.25

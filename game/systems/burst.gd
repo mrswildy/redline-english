@@ -42,7 +42,7 @@ func meter() -> float:
 	return 100
 
 func label() -> String:
-	if remaining>0: return "冲刺 %.1f s" % remaining
-	if cooldown>0: return "恢复 %.1f s" % cooldown
-	if charging: return "蓄满 · 松开冲刺" if charge>=CHARGE_SECONDS-.0001 else "蓄力 %d%%" % int(meter())
-	return "松开后重新蓄力" if previous_held else "SHIFT 按住蓄力 / 松开冲刺"
+	if remaining>0: return "BOOST %.1f s" % remaining
+	if cooldown>0: return "RECOVERING %.1f s" % cooldown
+	if charging: return "FULL · RELEASE TO BOOST" if charge>=CHARGE_SECONDS-.0001 else "CHARGING %d%%" % int(meter())
+	return "RELEASE TO CHARGE AGAIN" if previous_held else "HOLD SHIFT TO CHARGE / RELEASE TO BOOST"

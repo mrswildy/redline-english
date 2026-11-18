@@ -74,7 +74,7 @@ func mobile_point(point: Vector2) -> Vector2:
 	return (point-mobile_origin())/mobile_scale()
 
 func control_mode_label() -> String:
-	return ["自动识别","触屏","键盘 / 手柄"][race.career.settings.control_mode]
+	return ["Auto-detect","Touch","Keyboard / Controller"][race.career.settings.control_mode]
 
 func cycle_control_mode() -> void:
 	race.career.settings.control_mode = (race.career.settings.control_mode+1)%3
@@ -100,7 +100,7 @@ func rebind(key: int) -> void:
 		waiting_action = ""
 		return
 	if key in [KEY_ENTER,KEY_R,KEY_M,KEY_F3] or key in Controls.FIXED_KEYS:
-		race.notify("该按键保留给菜单、方向或攻击，请选其他键。",3)
+		race.notify("That key is reserved for menus, movement, or attacks. Choose another key.",3)
 		return
 	var bindings: Dictionary = race.career.settings.bindings
 	var old = Controls.binding_key(waiting_action,bindings)
@@ -122,7 +122,7 @@ func cycle_quality() -> void:
 
 func save_settings() -> void:
 	if not race.test_mode and not race.career.save_profile():
-		race.notify("设置未能保存。",3)
+		race.notify("Could not save settings.",3)
 
 func text(value: String,x: float,y: float,size: int = 18,color: Color = Color("d8d3bd"),heavy: bool = false) -> void:
 	var selected_font = (touch_bold if heavy else touch_font) if race.touch.enabled else (bold if heavy else font)
@@ -201,27 +201,27 @@ func draw_loading(view: Vector2) -> void:
 func draw_menu() -> void:
 	draw_rect(Rect2(0,0,1440,100),Color(.03,.04,.04,.90))
 	text("REDLINE",48,59,34,cream,true)
-	text("公 路 狂 徒   /   CLASSIC HIGHWAY COMBAT",285,55,16,faded)
+	text("REDLINE   /   CLASSIC HIGHWAY COMBAT",285,55,16,faded)
 	text("$ %s" % race.career.credits,1210,54,25,gold,true)
 	if race.mode == "ready":
 		panel(Rect2(45,145,465,619))
 		text("THE ROAD BELONGS",73,197,22,cream,true)
 		text("TO NOBODY.",73,241,32,cream,true)
-		text("高速穿过车流，把对手甩在身后。",73,284,18,faded)
-		text("选择赛事",73,333,14,gold)
+		text("Race through traffic and leave your rivals behind.",73,284,18,faded)
+		text("SELECT A RACE",73,333,14,gold)
 		for i in range(race.career.catalog.tracks.size()):
 			var track: Dictionary = race.career.catalog.tracks[i]
 			var locked = track.id not in race.career.unlocked
-			button(Rect2(73,349+i*61,408,51),("▶ " if race.track.id == track.id else "   ")+track.name+(" · 12 km" if track.id=="interstate" else "")+(" · 未解锁" if locked else ""),func(): race.select_track(i),false,false,race.track.id == track.id)
-		button(Rect2(73,548,408,61),"开始比赛     ENTER",func(): race.start(),true)
-		button(Rect2(73,621,197,48),"车库 / GARAGE",func(): race.menu_action("garage"))
-		button(Rect2(284,621,197,48),"驾驶设置",func(): race.menu_action("settings"))
-		button(Rect2(73,683,408,48),"教学练习 · 不计奖金",func(): race.start(true))
-		text("WASD / 方向键驾驶 · 空格攻击 · SHIFT 蓄力",73,754,14,faded)
+			button(Rect2(73,349+i*61,408,51),("▶ " if race.track.id == track.id else "   ")+track.name+(" · 12 km" if track.id=="interstate" else "")+(" · LOCKED" if locked else ""),func(): race.select_track(i),false,false,race.track.id == track.id)
+		button(Rect2(73,548,408,61),"START RACE     ENTER",func(): race.start(),true)
+		button(Rect2(73,621,197,48),"GARAGE",func(): race.menu_action("garage"))
+		button(Rect2(284,621,197,48),"SETTINGS",func(): race.menu_action("settings"))
+		button(Rect2(73,683,408,48),"PRACTICE · NO REWARD",func(): race.start(true))
+		text("WASD / ARROWS RIDE · SPACE ATTACK · SHIFT BOOST",73,754,14,faded)
 		text(race.track.subtitle,875,668,21,gold,true)
 		text(race.career.bike().name,875,710,26,cream,true)
 		text("%d km/h   ·   %s" % [int(race.player.top_speed*3.6),race.difficulty().name],875,744,18,cream)
-		text("3D 重制 / 90 年代公路精神",48,851,14,faded)
+		text("3D REMAKE / 90s HIGHWAY SPIRIT",48,851,14,faded)
 	elif race.mode == "garage":
 		draw_garage()
 	else:
@@ -233,32 +233,32 @@ func draw_garage() -> void:
 	text("360° SHOWROOM",655,174,22,cream,true)
 	panel(Rect2(45,136,570,657))
 	text("GARAGE",73,190,37,cream,true)
-	text("比赛获奖金，升级你的公路机器。",73,223,18,faded)
+	text("Win races, earn cash, and upgrade your ride.",73,223,18,faded)
 	for i in range(3):
 		var bike: Dictionary = race.career.catalog.bikes[i]
-		button(Rect2(73,250+i*66,512,55),bike.name+("  /  已拥有" if bike.id in race.career.owned else "  /  $%d" % bike.price),func(): preview_bike(i),false,false,garage_index == i)
+		button(Rect2(73,250+i*66,512,55),bike.name+("  /  OWNED" if bike.id in race.career.owned else "  /  $%d" % bike.price),func(): preview_bike(i),false,false,garage_index == i)
 	var selected: Dictionary = race.career.catalog.bikes[garage_index]
 	text(selected.description,73,480,18,faded)
-	text("极速",73,522,15)
+	text("TOP SPEED",73,522,15)
 	bar(143,512,315,selected.top_speed/65*100,gold)
 	text("%d km/h" % int(selected.top_speed*3.6),474,522,17,gold)
-	text("加速",73,554,15)
+	text("ACCELERATION",73,554,15)
 	bar(143,544,315,selected.acceleration/18*100,gold)
 	text("%.1f" % selected.acceleration,474,554,17,cream)
-	text("操控",73,586,15)
+	text("HANDLING",73,586,15)
 	bar(143,576,315,selected.handling/6*100,gold)
 	text("%.1f" % selected.handling,474,586,17,cream)
-	text("耐久",73,618,15)
+	text("DURABILITY",73,618,15)
 	bar(143,608,315,selected.durability/130*100,gold)
 	text("%d" % selected.durability,474,618,17,cream)
 	var owned = selected.id in race.career.owned
-	button(Rect2(73,652,512,52),"使用这辆摩托" if owned else "购买  $%d" % selected.price,func(): purchase_bike(),true,not owned and race.career.credits<int(selected.price))
-	button(Rect2(73,722,512,44),"← 返回赛事",func(): race.menu_action("home"))
+	button(Rect2(73,652,512,52),"RIDE THIS BIKE" if owned else "BUY  $%d" % selected.price,func(): purchase_bike(),true,not owned and race.career.credits<int(selected.price))
+	button(Rect2(73,722,512,44),"← BACK TO RACES",func(): race.menu_action("home"))
 	text(selected.name,660,711,32,cream,true)
 	text(selected.body_style,660,744,17,gold)
-	text("拖动旋转 / 上下调整视角 · 滚轮缩放",659,774,15,faded)
-	button(Rect2(1125,665,235,47),"自动旋转："+("开" if garage_view.auto_rotate else "关"),func(): garage_view.auto_rotate=not garage_view.auto_rotate)
-	button(Rect2(1125,727,235,42),"重置视角",func(): garage_view.reset_view())
+	text("DRAG TO ROTATE / VERTICAL DRAG TO PITCH · SCROLL TO ZOOM",659,774,15,faded)
+	button(Rect2(1125,665,235,47),"AUTO ROTATE: "+("ON" if garage_view.auto_rotate else "OFF"),func(): garage_view.auto_rotate=not garage_view.auto_rotate)
+	button(Rect2(1125,727,235,42),"RESET VIEW",func(): garage_view.reset_view())
 
 func preview_bike(index: int) -> void:
 	garage_index = index
@@ -274,44 +274,44 @@ func purchase_bike() -> void:
 	save_settings()
 	race.reset_race()
 	race.mode = "garage"
-	race.notify("已选择 "+selected.name)
+	race.notify("Selected "+selected.name)
 
 func draw_settings() -> void:
 	panel(Rect2(45,133,1350,670))
 	text("DRIVING SETUP",75,186,35,cream,true)
-	text("键盘 / 手柄 · 设置自动保存",75,217,17,faded)
+	text("KEYBOARD / CONTROLLER · SETTINGS SAVE AUTOMATICALLY",75,217,17,faded)
 	var settings = race.career.settings
-	button(Rect2(75,249,400,50),"难度："+race.difficulty().name,func(): settings.difficulty=(int(settings.difficulty)+1)%3; save_settings())
-	button(Rect2(75,312,400,50),"音量：%d%%" % (settings.volume*100),func(): settings.volume=0.0 if settings.volume>=.99 else minf(1,settings.volume+.25); save_settings())
-	button(Rect2(75,375,400,50),"镜头震动：%d%%" % (settings.shake*100),func(): settings.shake=0.0 if settings.shake>.9 else settings.shake+.5; save_settings())
-	button(Rect2(75,438,400,50),"路肩容错："+("开" if settings.assist else "关"),func(): settings.assist=not settings.assist; race.player.assist=settings.assist; save_settings())
-	button(Rect2(75,501,400,50),"大号速度读数："+("开" if settings.large_hud else "关"),func(): settings.large_hud=not settings.large_hud; save_settings())
-	button(Rect2(75,564,400,42),"音乐：%d%%" % (settings.music*100),func(): settings.music=0.0 if settings.music>=.99 else minf(1,settings.music+.25); save_settings())
-	button(Rect2(75,617,400,42),"画质："+quality_label(),func(): cycle_quality())
-	text("手柄：RT 油门 / LT 刹车 / 左摇杆 转向",75,686,16,cream)
-	text("X 拳 / A 踢 / Y 武器 / B 格挡 / RB 蓄力",535,640,17,cream)
-	text("L3 闪避 / R3 夺械 / LB 定速 / Start 暂停",535,675,16,faded)
-	button(Rect2(75,710,620,60),"操作："+control_mode_label(),func(): cycle_control_mode())
+	button(Rect2(75,249,400,50),"DIFFICULTY: "+race.difficulty().name,func(): settings.difficulty=(int(settings.difficulty)+1)%3; save_settings())
+	button(Rect2(75,312,400,50),"SFX VOLUME: %d%%" % (settings.volume*100),func(): settings.volume=0.0 if settings.volume>=.99 else minf(1,settings.volume+.25); save_settings())
+	button(Rect2(75,375,400,50),"CAMERA SHAKE: %d%%" % (settings.shake*100),func(): settings.shake=0.0 if settings.shake>.9 else settings.shake+.5; save_settings())
+	button(Rect2(75,438,400,50),"OFF-ROAD ASSIST: "+("ON" if settings.assist else "OFF"),func(): settings.assist=not settings.assist; race.player.assist=settings.assist; save_settings())
+	button(Rect2(75,501,400,50),"LARGE SPEED DISPLAY: "+("ON" if settings.large_hud else "OFF"),func(): settings.large_hud=not settings.large_hud; save_settings())
+	button(Rect2(75,564,400,42),"MUSIC: %d%%" % (settings.music*100),func(): settings.music=0.0 if settings.music>=.99 else minf(1,settings.music+.25); save_settings())
+	button(Rect2(75,617,400,42),"GRAPHICS: "+quality_label(),func(): cycle_quality())
+	text("CONTROLLER: RT THROTTLE / LT BRAKE / LEFT STICK STEER",75,686,16,cream)
+	text("X PUNCH / A KICK / Y WEAPON / B BLOCK / RB BOOST",535,640,17,cream)
+	text("L3 DODGE / R3 DISARM / LB CRUISE / START PAUSE",535,675,16,faded)
+	button(Rect2(75,710,620,60),"INPUT: "+control_mode_label(),func(): cycle_control_mode())
 	text("Music: Umplix (CC0) · Engines: dklon (CC-BY-SA 3.0)",75,797,13,faded)
 	var actions = Controls.LABELS.keys()
 	for i in range(actions.size()):
 		var action: String = actions[i]
 		var col = i/6
 		var row = i%6
-		button(Rect2(535+col*405,249+row*60,375,50),Controls.LABELS[action]+"     "+("按一个键…" if waiting_action == action else Controls.key_label(action,settings.bindings)),func(): waiting_action=action)
-	button(Rect2(1028,722,332,48),"保存并返回",func(): save_settings(); race.mode="ready")
+		button(Rect2(535+col*405,249+row*60,375,50),Controls.LABELS[action]+"     "+("PRESS A KEY…" if waiting_action == action else Controls.key_label(action,settings.bindings)),func(): waiting_action=action)
+	button(Rect2(1028,722,332,48),"SAVE & RETURN",func(): save_settings(); race.mode="ready")
 
 func draw_race() -> void:
 	var p = race.player
 	# The classic race information belongs on the instrument panel, keeping the road open.
 	panel(Rect2(0,730,1440,170),Color("101713"))
 	draw_line(Vector2(0,732),Vector2(1440,732),Color("717567"),3)
-	text("公路狂徒",28,766,22,cream,true)
-	text("骑手",29,804,13,faded)
+	text("REDLINE",28,766,22,cream,true)
+	text("RIDER",29,804,13,faded)
 	bar(97,796,190,p.health,Color("789463"))
-	text("车况",29,835,13,faded)
+	text("BIKE",29,835,13,faded)
 	bar(97,827,190,p.durability/p.max_durability*100,gold)
-	text("平衡",29,866,13,faded)
+	text("BALANCE",29,866,13,faded)
 	bar(97,858,190,p.stability,red if p.stability<40 else Color("758e82"))
 	dial(Vector2(397,817),67,p.speed*3.6,240,"KM/H")
 	text("%03d" % int(p.speed*3.6),490,830,62 if race.career.settings.large_hud else 49,cream,true)
@@ -325,30 +325,30 @@ func draw_race() -> void:
 	text("%02d:%05.2f" % [int(race.elapsed)/60,fmod(race.elapsed,60)],770,859,19,faded)
 	text("%04d / %d M" % [int(p.distance),int(race.track.length)],951,778,17,cream)
 	bar(951,794,208,p.distance/float(race.track.length)*100,gold)
-	text("%d KO   /   %d 环境击倒" % [p.knockouts,p.environment_kos],951,831,17,cream)
-	text("%d 连击" % p.combo,951,862,15,gold)
+	text("%d KO   /   %d ENVIRONMENTAL" % [p.knockouts,p.environment_kos],951,831,17,cream)
+	text("%d HIT COMBO" % p.combo,951,862,15,gold)
 	draw_mini_map(Vector2(1300,818))
 	panel(Rect2(40,570,270,116))
-	text(race.Combat.WEAPONS[p.weapon].name+"  /  "+("格挡中" if p.guarding else ("反击！" if p.counter_time>0 else "就绪")),58,601,19,gold,true)
-	text("体力",58,632,14,faded)
+	text(race.Combat.WEAPONS[p.weapon].name+"  /  "+("BLOCKING" if p.guarding else ("COUNTER!" if p.counter_time>0 else "READY")),58,601,19,gold,true)
+	text("STAMINA",58,632,14,faded)
 	bar(108,623,177,p.stamina,Color("758e82"))
-	text("闪避 %.1f s" % p.dodge_cooldown if p.dodge_cooldown>0 else "左键自动攻击 / 夺械 · I 闪避",58,663,14,faded)
+	text("DODGE %.1f s" % p.dodge_cooldown if p.dodge_cooldown>0 else "LEFT CLICK AUTO-ATTACK / DISARM · I DODGE",58,663,14,faded)
 	if race.endurance.index>=0:
 		panel(Rect2(465,107,340,36),Color(.02,.035,.03,.7))
 		text(race.endurance.stages[race.endurance.index].name,480,132,21,gold,true)
-	if p.condition_power()<.98: text("车损 · 动力下降",97,858,15,red,true)
+	if p.condition_power()<.98: text("BIKE DAMAGE · POWER REDUCED",97,858,15,red,true)
 	if race.police.active or race.heat>15:
 		panel(Rect2(1110,28,300,72))
-		text("POLICE / 警方追击" if race.police.active else "HEAT / 警觉度",1127,57,17,red if race.police.active else gold,true)
+		text("POLICE PURSUIT" if race.police.active else "HEAT",1127,57,17,red if race.police.active else gold,true)
 		bar(1127,76,264,race.heat,red)
 	var opponent = race.nearest_target(18)
 	if opponent>=0 and race.mode == "racing":
 		var r = race.racers[opponent]
 		panel(Rect2(40,30,264,81))
-		text(r.name+(("  /  正在夺械" if r.stealing else "  /  即将攻击") if (r.windup>0 and r.combat_target==-1) else "  /  "+race.RacerAI.intent_label(r)),58,60,18,red if (r.windup>0 and r.combat_target==-1) else cream,true)
+		text(r.name+(("  /  DISARMING" if r.stealing else "  /  WINDING UP") if (r.windup>0 and r.combat_target==-1) else "  /  "+race.RacerAI.intent_label(r)),58,60,18,red if (r.windup>0 and r.combat_target==-1) else cream,true)
 		bar(58,82,226,r.hp,red)
 	if race.tutorial and race.mode == "racing":
-		var lessons = ["01  按住油门，达到 70 km/h","02  左右转向，移动到另一条车道","03  靠近骑手，按 J / K / L 命中一次","04  按住 Shift 蓄满，再松开冲刺","教学完成 · 继续挑战终点，练习中不会报废"]
+		var lessons = ["01  HOLD THROTTLE TO REACH 70 KM/H","02  STEER LEFT OR RIGHT TO CHANGE LANES","03  GET CLOSE AND LAND A HIT WITH J / K / L","04  HOLD SHIFT TO CHARGE, THEN RELEASE TO BOOST","TUTORIAL COMPLETE · RACE TO THE FINISH; YOU CAN'T WRECK IN PRACTICE"]
 		panel(Rect2(415,30,610,59))
 		text(lessons[race.lesson],436,68,20,gold)
 	if race.flash>0:
@@ -357,7 +357,7 @@ func draw_race() -> void:
 		panel(Rect2(25,144,350,104))
 		text("FPS %d   DRAW %d" % [Engine.get_frames_per_second(),Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)],41,175,17)
 		text("%.0f triangles" % Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),41,204,17)
-		text("F3 隐藏 · 物理 60 Hz",41,231,14,faded)
+		text("F3 HIDE · PHYSICS 60 HZ",41,231,14,faded)
 	if race.mode in ["paused","finished","countdown"]:
 		draw_overlay()
 
@@ -401,13 +401,13 @@ func draw_overlay() -> void:
 		# Keep the overhead starting lamps unobscured throughout the countdown.
 		panel(Rect2(580,475,280,150))
 		text(str(int(ceil(race.countdown))),695,555,72,gold,true)
-		text("油门准备  /  RT 或 W",606,601,19)
+	text("READY TO THROTTLE  /  RT OR W",606,601,19)
 		return
 	draw_rect(Rect2(0,0,1440,730),Color(.02,.03,.025,.6))
 	panel(Rect2(410,150,620,505))
 	text("PAUSED",450,221,49,cream,true)
-	text("比赛已暂停",450,269,22,gold)
-	text("WASD / ↑ ↓ ← → 驾驶",450,330,21)
-	text("左键 / 空格攻击；刹车会取消定速油门。",450,375,19,faded)
-	button(Rect2(450,480,540,56),"继续比赛 / ESC",func(): race.menu_action("resume"),true)
-	button(Rect2(450,552,540,51),"返回赛事 / 车库",func(): race.menu_action("home"))
+	text("RACE PAUSED",450,269,22,gold)
+	text("WASD / ↑ ↓ ← → TO RIDE",450,330,21)
+	text("LEFT CLICK / SPACE TO ATTACK; BRAKING CANCELS CRUISE CONTROL.",450,375,19,faded)
+	button(Rect2(450,480,540,56),"RESUME RACE / ESC",func(): race.menu_action("resume"),true)
+	button(Rect2(450,552,540,51),"BACK TO RACES / GARAGE",func(): race.menu_action("home"))

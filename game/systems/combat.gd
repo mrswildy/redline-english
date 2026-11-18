@@ -6,9 +6,9 @@ const RECOVERY = .44
 const REACH = [2.05,2.55,2.25]
 
 const WEAPONS = [
-	{"name":"空手","damage":0.0},
-	{"name":"木棒","damage":28.0},
-	{"name":"钢管","damage":34.0}
+	{"name":"Unarmed","damage":0.0},
+	{"name":"Club","damage":28.0},
+	{"name":"Pipe","damage":34.0}
 ]
 
 # One impact profile drives physics, animation, camera and sound for each attack.
@@ -36,7 +36,7 @@ static func racer_grab(race: Node3D, attacker: Dictionary, target: int) -> bool:
 		p.weapon = 0
 		p.attack_time = 0
 		race.pending_attack = 0
-		race.notify(attacker.name+" 夺走了武器！")
+		race.notify(attacker.name+" stole your weapon!")
 		return true
 	if target<0: return false
 	var r = race.racers[target]
@@ -58,11 +58,11 @@ static func grab(race: Node3D) -> bool:
 	p.stamina -= 20
 	var index: int = race.nearest_target()
 	if index < 0:
-		race.notify("夺械落空 · 靠近持械对手")
+		race.notify("Disarm missed · get closer to an armed rival.")
 		return false
 	var r = race.racers[index]
 	if absf(r.s-p.distance)>2 or absf(r.lane-p.lane)>2.2 or r.weapon == 0 or (r.windup<=0 and r.stagger<=0):
-		race.notify("夺械失败 · 等对手蓄力或硬直")
+		race.notify("Disarm failed · wait for a rival to wind up or stagger.")
 		return false
 	p.weapon = r.weapon
 	r.weapon = 0
@@ -74,14 +74,14 @@ static func grab(race: Node3D) -> bool:
 	p.attack_kind = 0
 	p.attack_time = .44
 	race.feedback(false,r.mesh.global_position+Vector3.UP)
-	race.notify("夺得"+WEAPONS[p.weapon].name+("！点击攻击挥击" if race.touch.enabled else "！按 L 挥击"))
+	race.notify("Picked up "+WEAPONS[p.weapon].name+("! Tap to swing." if race.touch.enabled else "! Press L to swing."))
 	return true
 
 static func enemy_strike(race: Node3D, r: Dictionary) -> String:
 	var p = race.player
 	if p.dodge_time > .12:
 		p.counter_time = 1.0
-		race.notify("闪避成功 · 反击窗口")
+		race.notify("Dodge successful · counter window!")
 		return "dodge"
 	if p.guarding and p.stamina>=20:
 		p.stamina -= 20 if r.kind != 1 else 35
@@ -89,11 +89,11 @@ static func enemy_strike(race: Node3D, r: Dictionary) -> String:
 			r.stagger = 1.1
 			r.windup = 0
 			p.counter_time = 1.2
-			race.notify("精准格挡！按 O 夺械 / J K L 反击")
+			race.notify("Perfect block! Press O to disarm / J K L to counter.")
 			return "parry"
 		if r.kind != 1 and p.stamina>0:
 			p.damage(2*race.difficulty().damage,5)
-			race.notify("格挡 · 体力消耗")
+		race.notify("Blocking · stamina draining")
 			return "block"
 		p.guarding = false
 	var damage: float = [8,10,WEAPONS[r.weapon].damage*.48][r.kind]

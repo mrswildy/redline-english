@@ -1,6 +1,6 @@
 extends RefCounted
 
-const LABELS = ["流畅", "均衡", "精细"]
+const LABELS = ["Performance", "Balanced", "Quality"]
 
 static func apply(viewport: Viewport, level: int) -> void:
 	viewport.scaling_3d_scale = .75 if level == 0 else 1.0

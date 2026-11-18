@@ -16,17 +16,17 @@ func load_profile() -> void:
 		return
 	var parser = JSON.new()
 	if parser.parse(FileAccess.get_file_as_string(path)) != OK:
-		load_error = "存档格式无效，本次不会覆盖原存档。"
+		load_error = "Invalid save format. The existing save will not be overwritten."
 		return
 	var parsed = parser.data
 	if not parsed is Dictionary or parsed.get("version") != 2 or not parsed.get("owned") is Array or not parsed.get("records") is Dictionary:
-		load_error = "存档格式无效，本次不会覆盖原存档。"
+		load_error = "Invalid save format. The existing save will not be overwritten."
 		return
 	if not parsed.get("unlocked", ["pine"]) is Array or not parsed.get("settings", {}) is Dictionary:
-		load_error = "存档设置字段损坏，本次不会覆盖原存档。"
+		load_error = "Save settings are damaged. The existing save will not be overwritten."
 		return
 	if not parsed.get("credits") is float and not parsed.get("credits") is int:
-		load_error = "存档金额字段损坏，本次不会覆盖原存档。"
+		load_error = "Save credits are damaged. The existing save will not be overwritten."
 		return
 	credits = maxi(0, int(parsed.credits))
 	owned = parsed.owned.filter(func(id): return id in ["ratchet", "revenant", "phantom"])

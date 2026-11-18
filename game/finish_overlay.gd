@@ -11,15 +11,15 @@ static func draw(h, width: float, height: float) -> void:
 	var u=minf(width/960.0,height/540.0)
 	var origin=Vector2((width-960*u)*.5,(height-540*u)*.5)
 	if age<.85:
-		var label="冲线！" if race.result=="FINISH" else "比赛结束"
+		var label="FINISH!" if race.result=="FINISH" else "RACE OVER"
 		var banner=Rect2(origin+Vector2(295,155)*u,Vector2(370,100)*u)
 		h.panel(banner,Color(.03,.045,.035,smoothstep(0,.15,age)*.8))
 		text(h,label,origin+Vector2(373,222)*u,48*u,h.gold if race.result=="FINISH" else h.cream,true)
 		return
 	h.draw_rect(Rect2(0,0,width,height),Color(.025,.04,.035,reveal*.94))
 	var accent=h.gold if presentation.champion else h.cream
-	var title="冠军！" if presentation.champion else ("第 %d 名完赛" % race.rank if race.result=="FINISH" else "车辆报废" if race.result=="WRECKED" else "被警方截获")
-	if race.tutorial and race.result=="FINISH": title="练习完成"
+	var title="CHAMPION!" if presentation.champion else ("FINISHED · POSITION %d" % race.rank if race.result=="FINISH" else "WRECKED" if race.result=="WRECKED" else "BUSTED BY POLICE")
+	if race.tutorial and race.result=="FINISH": title="PRACTICE COMPLETE"
 	text(h,"REDLINE / "+race.track.name,origin+Vector2(66,63)*u,18*u,Color(h.faded,reveal),true)
 	h.draw_line(origin+Vector2(66,82)*u,origin+Vector2(894,82)*u,Color(accent,.3*reveal),u)
 	if presentation.champion:
@@ -38,12 +38,12 @@ static func draw(h, width: float, height: float) -> void:
 		h.draw_arc(center,78*u,0,TAU,64,Color(accent,.6*reveal),4*u,true)
 		text(h,str(race.rank) if race.result=="FINISH" else "×",center+Vector2(-26,25)*u,78*u,Color(accent,reveal),true)
 	text(h,title,origin+Vector2(410,173)*u,48*u,Color(accent,reveal),true)
-	text(h,"这条公路属于你。" if presentation.champion else race.message,origin+Vector2(412,213)*u,21*u,Color(h.faded,reveal))
-	text(h,"用时  %.2f s" % race.elapsed,origin+Vector2(412,266)*u,24*u,Color(h.cream,reveal),true)
-	text(h,"击倒 %d   环境击倒 %d   最长连击 %d" % [race.player.knockouts,race.player.environment_kos,race.player.best_combo],origin+Vector2(412,301)*u,19*u,Color(h.faded,reveal))
+	text(h,"This road is yours." if presentation.champion else race.message,origin+Vector2(412,213)*u,21*u,Color(h.faded,reveal))
+	text(h,"TIME  %.2f s" % race.elapsed,origin+Vector2(412,266)*u,24*u,Color(h.cream,reveal),true)
+	text(h,"TAKEDOWNS %d   ENVIRONMENTAL %d   BEST COMBO %d" % [race.player.knockouts,race.player.environment_kos,race.player.best_combo],origin+Vector2(412,301)*u,19*u,Color(h.faded,reveal))
 	var displayed_reward=int(race.reward*smoothstep(1.2,2.3,age))
-	text(h,"奖金  $%d" % displayed_reward,origin+Vector2(412,350)*u,32*u,Color(h.gold,reveal),true)
-	text(h,"余额 $%d" % race.career.credits,origin+Vector2(412,380)*u,18*u,Color(h.faded,reveal))
+	text(h,"PRIZE  $%d" % displayed_reward,origin+Vector2(412,350)*u,32*u,Color(h.gold,reveal),true)
+	text(h,"BALANCE $%d" % race.career.credits,origin+Vector2(412,380)*u,18*u,Color(h.faded,reveal))
 	if presentation.buttons_ready():
-		h.button(Rect2(origin+Vector2(66,435)*u,Vector2(398,66)*u),"再赛一局",func():race.menu_action("retry"),true)
-		h.button(Rect2(origin+Vector2(486,435)*u,Vector2(408,66)*u),"返回赛事 / 车库",func():race.menu_action("home"))
+		h.button(Rect2(origin+Vector2(66,435)*u,Vector2(398,66)*u),"RACE AGAIN",func():race.menu_action("retry"),true)
+		h.button(Rect2(origin+Vector2(486,435)*u,Vector2(408,66)*u),"BACK TO RACES / GARAGE",func():race.menu_action("home"))

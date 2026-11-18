@@ -1,7 +1,7 @@
 config_version=5
 
 [application]
-config/name="REDLINE • 公路狂徒"
+config/name="REDLINE: Road Rash"
 run/main_scene="res://game/main.tscn"
 config/version="0.5.0"
 config/icon="res://assets/branding/redline.png"
